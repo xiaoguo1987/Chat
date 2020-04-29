@@ -197,6 +197,7 @@ public class ChatServer {
                 while ((size = client.read(buf)) > 0) {
                     buf.flip();
                     baos.write(buf.array(), 0, size);
+
                     buf.clear();
                 }
                 if (size == -1) {
@@ -209,6 +210,7 @@ public class ChatServer {
                 byte[] bytes = baos.toByteArray();
                 baos.close();
                 Message message = ProtoStuffUtil.deserialize(bytes, Message.class);
+				System.out.println("写的字节值：message="+message);
                 MessageHandler messageHandler = SpringContextUtil.getBean("MessageHandler", message.getHeader().getType().toString().toLowerCase());
                 try {
                     messageHandler.handle(message, selector, key, downloadTaskQueue, onlineUsers);
